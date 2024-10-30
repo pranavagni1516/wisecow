@@ -1,12 +1,17 @@
-FROM node:14
+FROM ubuntu
 
 WORKDIR /app
 
-COPY package*.json ./
-RUN npm install
+RUN apt -y update
+RUN apt install git netcat-openbsd -y
+RUN git clone https://github.com/nyrahul/wisecow
 
-COPY . .
+WORKDIR /app/wisecow
 
-EXPOSE 3000
+RUN apt install fortune-mod cowsay -y
 
-CMD ["npm", "start"]
+ENV PATH=$PATH:/usr/games
+
+RUN chmod 755 wisecow.sh
+
+ENTRYPOINT [ "./wisecow.sh" ]
