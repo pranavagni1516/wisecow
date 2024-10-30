@@ -1,17 +1,20 @@
-FROM ubuntu
+# Use an official Node.js runtime as a base image
+FROM node:18
 
+# Set the working directory in the container
 WORKDIR /app
 
-RUN apt -y update
-RUN apt install git netcat-openbsd -y
-RUN git clone https://github.com/nyrahul/wisecow
+# Copy the package.json and package-lock.json files
+COPY package*.json ./
 
-WORKDIR /app/wisecow
+# Install dependencies
+RUN npm install
 
-RUN apt install fortune-mod cowsay -y
+# Copy the entire application code to the working directory
+COPY . .
 
-ENV PATH=$PATH:/usr/games
+# Expose the port the app listens on (e.g., 3000)
+EXPOSE 4499
 
-RUN chmod 755 wisecow.sh
-
-ENTRYPOINT [ "./wisecow.sh" ]
+# Run the application
+CMD ["npm", "start"]
